@@ -1,0 +1,38 @@
+The exception "NullPointerException" is being thrown in the addBlock method of the Blockchain class. Specifically, at line 70 and 91.
+
+This error occurs when you try to access or use an object reference that has not been initialized (i.e., its value is null).
+
+To fix this issue, you need to ensure that the chain array is properly initialized before adding blocks to it. One way to do this is by initializing the chain array with the genesis block in the constructor of the Blockchain class.
+
+Here's an updated version of the Blockchain class with the necessary changes:
+
+```java
+class Blockchain {
+    private Block[] chain;
+    private int difficulty;
+
+    public Blockchain() {
+        this.chain = new Block[] { createGenesisBlock() };
+        this.difficulty = 4;
+    }
+
+    private Block createGenesisBlock() {
+        return new Block(0, new Date().getTime(), "Genesis Block", "0");
+    }
+
+    public Block getLatestBlock() {
+        return chain[chain.length - 1];
+    }
+
+    public void addBlock(Block newBlock) {
+        newBlock.previousHash = getLatestBlock().hash;
+        newBlock.mineBlock(difficulty);
+        Block[] newChain = new Block[chain.length + 1];
+        System.arraycopy(chain, 0, newChain, 0, chain.length);
+        newChain[newChain.length - 1] = newBlock;
+        chain = newChain;
+    }
+}
+```
+
+This should resolve the NullPointerException issue.
