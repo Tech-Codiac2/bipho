@@ -1,0 +1,55 @@
+Sure! Here's the provided code converted into Python:
+
+```python
+import hashlib
+import datetime
+
+class Block:
+    def __init__(self, index, timestamp, data, previousHash=''):
+        self.index = index
+        self.timestamp = timestamp
+        self.data = data
+        self.previousHash = previousHash
+        self.hash = self.calculateHash()
+        self.nonce = 0
+        
+    def calculateHash(self):
+        sha = hashlib.sha256()
+        sha.update(str(self.index).encode('utf-8') + 
+                   self.previousHash.encode('utf-8') +
+                   str(self.timestamp).encode('utf-8') +
+                   str(self.data).encode('utf-8') +
+                   str(self.nonce).encode('utf-8'))
+        return sha.hexdigest()
+    
+    def mineBlock(self, difficulty):
+        while self.hash[:difficulty] != '0' * difficulty:
+            self.nonce += 1
+            self.hash = self.calculateHash()
+        print("Block mined: " + self.hash)
+        
+class Blockchain:
+    def __init__(self):
+        self.chain = [self.createGenesisBlock()]
+        self.difficulty = 4
+        
+    def createGenesisBlock(self):
+        return Block(0, datetime.datetime.now(), "Genesis Block", "0")
+    
+    def getLatestBlock(self):
+        return self.chain[-1]
+    
+    def addBlock(self, newBlock):
+        newBlock.previousHash = self.getLatestBlock().hash
+        newBlock.mineBlock(self.difficulty)
+        self.chain.append(newBlock)
+
+ZeeCoin = Blockchain()
+print("Mining block 1...")
+ZeeCoin.addBlock(Block(1, datetime.datetime.now(), {"amount": 4}))
+
+print("Mining block 2...")
+ZeeCoin.addBlock(Block(2, datetime.datetime.now(), {"amount": 8}))
+```
+
+This is the equivalent code in Python based on the provided JavaScript code. Note that the hashlib library is used for SHA256 hashing and the datetime module is used for timestamps.
